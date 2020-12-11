@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-const notificationMiddlewate = () => (next) => (action) => {
+const notificationMiddleware = () => (next) => (action) => {
   if (/(.*)(error)/.test(action.type) && action.payload.error) {
     toast.error("Something went wrong!", {
       position: "top-center",
@@ -26,4 +26,4 @@ const notificationMiddlewate = () => (next) => (action) => {
   next(action);
 };
 
-export default notificationMiddlewate;
+export default notificationMiddleware;
