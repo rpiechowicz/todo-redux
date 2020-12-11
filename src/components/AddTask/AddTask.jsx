@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { add, error, selectError } from "../../redux/tasksSlice";
 import { v4 as uuidv4 } from "uuid";
@@ -43,7 +43,15 @@ function AddTask() {
   const [checkboxTask, setCheckboxTask] = useState(false);
   const classes = useStyles();
 
-  const handleAddTask = () => {
+  const labelError = useMemo(() => (errorIsActive ? "Error" : "Description"), [
+    errorIsActive,
+  ]);
+
+  const helperTextError = useMemo(() => errorIsActive && "Filed is required", [
+    errorIsActive,
+  ]);
+
+  const handleAddTask = useCallback(() => {
     if (!inputTask) {
       dispatch(error({ error: true }));
       return;
@@ -67,7 +75,20 @@ function AddTask() {
       setCheckboxTask(false);
       handleDateChange(new Date());
     }
-  };
+  }, [checkboxTask, errorIsActive, inputTask, selectedDate, dispatch]);
+
+  const handleChangeInput = useCallback(
+    (e) =>
+      setInputTask(e.target.value) &&
+      errorIsActive &&
+      dispatch(error({ error: false })),
+    [errorIsActive, dispatch]
+  );
+
+  const handleSetCheckbox = useCallback(
+    (e) => setCheckboxTask(e.target.checked),
+    []
+  );
 
   return (
     <div>
@@ -86,13 +107,10 @@ function AddTask() {
               <TextField
                 error={errorIsActive}
                 id="standard-error-helper-text"
-                label={errorIsActive ? "Error" : "Description"}
-                helperText={errorIsActive && "Filed is required"}
+                label={labelError}
+                helperText={helperTextError}
                 value={inputTask}
-                onChange={(e) => (
-                  setInputTask(e.target.value),
-                  errorIsActive && dispatch(error({ error: false }))
-                )}
+                onChange={handleChangeInput}
               />
             </FormControl>
           </div>
@@ -112,7 +130,7 @@ function AddTask() {
               control={<Checkbox name="priority" color="primary" />}
               label="Priority"
               checked={checkboxTask}
-              onChange={(e) => setCheckboxTask(e.target.checked)}
+              onChange={handleSetCheckbox}
             />
           </div>
         </CardContent>

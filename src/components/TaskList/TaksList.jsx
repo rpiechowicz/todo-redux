@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { finish, remove, selectTasks } from "../../redux/tasksSlice";
 
@@ -43,15 +43,16 @@ const ListOfTasks = ({
 }) => {
   const classes = useStyles();
 
-  const importantField = (
-    <span className={classes.importantField}>Important</span>
+  const secondaryText = useMemo(
+    () => priority && <span className={classes.importantField}>Important</span>,
+    [priority, classes.importantField]
   );
 
   return (
     <div>
       <List>
         <ListItem>
-          <ListItemText primary={text} secondary={priority && importantField} />
+          <ListItemText primary={text} secondary={secondaryText} />
           <ListItemText className={classes.date}>{date}</ListItemText>
           <ListItemSecondaryAction>
             <IconButton edge="end" aria-label="delete" onClick={onClickRemove}>
@@ -89,40 +90,46 @@ function TaksList({ activeTasks = [], finishedTasks = [], title }) {
   const tasks = useSelector(selectTasks);
   const dispatch = useDispatch();
 
-  const handleFinishTask = (id) => {
-    let tasksList = [...tasks];
-    tasksList = tasksList.map((task) => {
-      if (task.id === id) {
-        return {
-          id: task.id,
-          text: task.text,
-          date: task.date,
-          active: false,
-          priority: task.priority,
-        };
-      } else {
-        return task;
-      }
-    });
+  const handleFinishTask = useCallback(
+    (id) => {
+      let tasksList = [...tasks];
+      tasksList = tasksList.map((task) => {
+        if (task.id === id) {
+          return {
+            id: task.id,
+            text: task.text,
+            date: task.date,
+            active: false,
+            priority: task.priority,
+          };
+        } else {
+          return task;
+        }
+      });
 
-    dispatch(
-      finish({
-        tasksList,
-      })
-    );
-  };
+      dispatch(
+        finish({
+          tasksList,
+        })
+      );
+    },
+    [tasks, dispatch]
+  );
 
-  const handleRemoveTask = (id) => {
-    const tasksList = [...tasks];
-    const indexTask = tasksList.findIndex((task) => task.id === id);
-    tasksList.splice(indexTask, 1);
+  const handleRemoveTask = useCallback(
+    (id) => {
+      const tasksList = [...tasks];
+      const indexTask = tasksList.findIndex((task) => task.id === id);
+      tasksList.splice(indexTask, 1);
 
-    dispatch(
-      remove({
-        tasksList,
-      })
-    );
-  };
+      dispatch(
+        remove({
+          tasksList,
+        })
+      );
+    },
+    [tasks, dispatch]
+  );
 
   return (
     <div>

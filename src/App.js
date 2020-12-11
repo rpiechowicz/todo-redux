@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { selectTasks } from "./redux/tasksSlice";
 import { toast } from "react-toastify";
@@ -21,8 +21,14 @@ function App() {
   const classes = useStyles();
   toast.configure();
 
-  const activeTasks = tasks && tasks.filter((task) => task.active);
-  const finishedTasks = tasks && tasks.filter((task) => !task.active);
+  const activeTasks = useMemo(
+    () => tasks && tasks.filter((task) => task.active),
+    [tasks]
+  );
+  const finishedTasks = useMemo(
+    () => tasks && tasks.filter((task) => !task.active),
+    [tasks]
+  );
 
   return (
     <div className="App">
