@@ -37,10 +37,11 @@ const useStyles = makeStyles({
 
 function AddTask() {
   const errorIsActive = useSelector(selectError);
-  const classes = useStyles();
   const dispatch = useDispatch();
   const [selectedDate, handleDateChange] = useState(new Date());
   const [inputTask, setInputTask] = useState("");
+  const [checkboxTask, setCheckboxTask] = useState(false);
+  const classes = useStyles();
 
   const handleAddTask = () => {
     if (!inputTask) {
@@ -48,10 +49,6 @@ function AddTask() {
       return;
     } else {
       if (errorIsActive) dispatch(error({ error: false }));
-
-      console.log(
-        new Date(selectedDate).toLocaleDateString().split(".").join("-")
-      );
 
       dispatch(
         add({
@@ -62,11 +59,12 @@ function AddTask() {
             .split(".")
             .join("-"),
           active: true,
-          priority: false,
+          priority: checkboxTask,
         })
       );
 
       setInputTask("");
+      setCheckboxTask(false);
       handleDateChange(new Date());
     }
   };
@@ -106,6 +104,8 @@ function AddTask() {
             <FormControlLabel
               control={<Checkbox name="priority" color="primary" />}
               label="Priority"
+              checked={checkboxTask}
+              onChange={(e) => setCheckboxTask(e.target.checked)}
             />
           </div>
         </CardContent>
