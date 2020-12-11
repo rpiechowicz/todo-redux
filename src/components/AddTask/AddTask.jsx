@@ -89,7 +89,10 @@ function AddTask() {
                 label={errorIsActive ? "Error" : "Description"}
                 helperText={errorIsActive && "Filed is required"}
                 value={inputTask}
-                onChange={(e) => setInputTask(e.target.value)}
+                onChange={(e) => (
+                  setInputTask(e.target.value),
+                  errorIsActive && dispatch(error({ error: false }))
+                )}
               />
             </FormControl>
           </div>
