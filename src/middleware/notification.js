@@ -11,6 +11,16 @@ const notificationMiddlewate = () => (next) => (action) => {
       draggable: true,
       progress: undefined,
     });
+  } else if (/(.*)(add)/.test(action.type)) {
+    toast.success("Added new task!", {
+      position: "top-center",
+      autoClose: 3500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   }
 
   next(action);
