@@ -4,6 +4,7 @@ import { finish, remove, selectTasks } from "../../redux/tasksSlice";
 
 import { Panel } from "../../views";
 
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Typography,
   CardContent,
@@ -18,47 +19,73 @@ import {
 import DeleteIcon from "@material-ui/icons/Delete";
 import DoneIcon from "@material-ui/icons/Done";
 
+const useStyles = makeStyles({
+  importantField: {
+    color: "red",
+    fontWeight: 400,
+  },
+  date: {
+    position: "absolute",
+    right: "20%",
+  },
+  title: {
+    fontSize: 20,
+  },
+});
+
 const ListOfTasks = ({
-  id,
   text,
   date,
   priority,
   active,
   onClickFinish,
   onClickRemove,
-}) => (
-  <>
-    <List>
-      <ListItem>
-        <ListItemText primary={text} secondary={priority && "Important"} />
-        <ListItemText style={{ position: "absolute", right: "20%" }}>
-          {date}
-        </ListItemText>
-        <ListItemSecondaryAction>
-          <IconButton edge="end" aria-label="delete" onClick={onClickRemove}>
-            <DeleteIcon />
-          </IconButton>
-          {active && (
-            <IconButton edge="end" aria-label="delete" onClick={onClickFinish}>
-              <DoneIcon />
+}) => {
+  const classes = useStyles();
+
+  const importantField = (
+    <span className={classes.importantField}>Important</span>
+  );
+
+  return (
+    <div>
+      <List>
+        <ListItem>
+          <ListItemText primary={text} secondary={priority && importantField} />
+          <ListItemText className={classes.date}>{date}</ListItemText>
+          <ListItemSecondaryAction>
+            <IconButton edge="end" aria-label="delete" onClick={onClickRemove}>
+              <DeleteIcon />
             </IconButton>
-          )}
-        </ListItemSecondaryAction>
-      </ListItem>
-    </List>
-    <Divider />
-  </>
-);
+            {active && (
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={onClickFinish}
+              >
+                <DoneIcon />
+              </IconButton>
+            )}
+          </ListItemSecondaryAction>
+        </ListItem>
+      </List>
+      <Divider />
+    </div>
+  );
+};
+const TypographTitle = ({ title }) => {
+  const classes = useStyles();
 
-const TypographTitle = ({ title }) => (
-  <CardContent>
-    <Typography style={{ fontSize: 20 }} color="textSecondary" gutterBottom>
-      {title}
-    </Typography>
-  </CardContent>
-);
+  return (
+    <CardContent>
+      <Typography className={classes.title} color="textSecondary" gutterBottom>
+        {title}
+      </Typography>
+    </CardContent>
+  );
+};
 
-function TaksList({ activeTasks = [], finishedTasks = [] }) {
+function TaksList({ activeTasks = [], finishedTasks = [], title }) {
   const tasks = useSelector(selectTasks);
   const dispatch = useDispatch();
 
@@ -100,11 +127,7 @@ function TaksList({ activeTasks = [], finishedTasks = [] }) {
   return (
     <div>
       <Panel>
-        {activeTasks ? (
-          <TypographTitle title="Active Tasks" />
-        ) : (
-          <TypographTitle title="Finished Tasks" />
-        )}
+        <TypographTitle title={title} />
 
         {activeTasks &&
           activeTasks.map((task) => (

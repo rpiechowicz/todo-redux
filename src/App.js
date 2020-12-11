@@ -31,10 +31,16 @@ function App() {
           <AddTask />
 
           {/* Active Tasks */}
-          <TaskList activeTasks={activeTasks && [...activeTasks]} />
+          <TaskList
+            activeTasks={activeTasks && [...activeTasks]}
+            title={"Active Tasks"}
+          />
 
           {/* Finised Tasks */}
-          <TaskList finishedTasks={finishedTasks && [...finishedTasks]} />
+          <TaskList
+            finishedTasks={finishedTasks && [...finishedTasks]}
+            title={"Finished Tasks"}
+          />
         </div>
       </header>
     </div>
