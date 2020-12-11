@@ -99,7 +99,11 @@ function AddTask() {
 
           <div className={classes.item}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <DatePicker value={selectedDate} onChange={handleDateChange} />
+              <DatePicker
+                value={selectedDate}
+                minDate={new Date()}
+                onChange={handleDateChange}
+              />
             </MuiPickersUtilsProvider>
           </div>
 
