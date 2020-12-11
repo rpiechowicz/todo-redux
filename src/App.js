@@ -16,11 +16,12 @@ const useStyles = makeStyles({
 
 function App() {
   const tasks = useSelector(selectTasks);
+
   // const dispatch = useDispatch();
   const classes = useStyles();
 
-  const activeTasks = tasks.filter((task) => task.active);
-  const finishedTasks = tasks.filter((task) => !task.active);
+  const activeTasks = tasks && tasks.filter((task) => task.active);
+  const finishedTasks = tasks && tasks.filter((task) => !task.active);
 
   return (
     <div className="App">

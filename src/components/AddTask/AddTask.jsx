@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { add, error, selectError } from "../../redux/tasksSlice";
+import { v4 as uuidv4 } from "uuid";
 
 import { Panel } from "../../views";
 
@@ -10,10 +13,9 @@ import {
   Button,
   Typography,
   FormControl,
-  Input,
   FormControlLabel,
-  InputLabel,
   Checkbox,
+  TextField,
 } from "@material-ui/core";
 
 const useStyles = makeStyles({
@@ -34,11 +36,39 @@ const useStyles = makeStyles({
 });
 
 function AddTask() {
+  const errorIsActive = useSelector(selectError);
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [selectedDate, handleDateChange] = useState(new Date());
+  const [inputTask, setInputTask] = useState("");
 
   const handleAddTask = () => {
-    console.log("add");
+    if (!inputTask) {
+      dispatch(error({ error: true }));
+      return;
+    } else {
+      if (errorIsActive) dispatch(error({ error: false }));
+
+      console.log(
+        new Date(selectedDate).toLocaleDateString().split(".").join("-")
+      );
+
+      dispatch(
+        add({
+          id: uuidv4(),
+          text: inputTask,
+          date: new Date(selectedDate)
+            .toLocaleDateString()
+            .split(".")
+            .join("-"),
+          active: true,
+          priority: false,
+        })
+      );
+
+      setInputTask("");
+      handleDateChange(new Date());
+    }
   };
 
   return (
@@ -55,8 +85,14 @@ function AddTask() {
 
           <div className={classes.item}>
             <FormControl>
-              <InputLabel htmlFor="my-input">Description</InputLabel>
-              <Input name="text" aria-describedby="my-helper-text" />
+              <TextField
+                error={errorIsActive}
+                id="standard-error-helper-text"
+                label={errorIsActive ? "Error" : "Description"}
+                helperText={errorIsActive && "Filed is required"}
+                value={inputTask}
+                onChange={(e) => setInputTask(e.target.value)}
+              />
             </FormControl>
           </div>
 
