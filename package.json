@@ -1,5 +1,6 @@
 {
   "name": "todo-redux-rp",
+  "homepage": "https://rpiechowicz.github.io/todo-redux/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -20,6 +21,8 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -40,5 +43,8 @@
       "last 1 safari version"
     ]
   },
-  "_id": "todo-redux-rp@0.1.0"
+  "_id": "todo-redux-rp@0.1.0",
+  "devDependencies": {
+    "gh-pages": "^3.1.0"
+  }
 }
