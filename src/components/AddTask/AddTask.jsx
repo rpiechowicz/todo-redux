@@ -78,10 +78,11 @@ function AddTask() {
   }, [checkboxTask, errorIsActive, inputTask, selectedDate, dispatch]);
 
   const handleChangeInput = useCallback(
-    (e) =>
-      setInputTask(e.target.value) &&
-      errorIsActive &&
-      dispatch(error({ error: false })),
+    (e) => {
+      setInputTask(e.target.value);
+      errorIsActive && dispatch(error({ error: false }));
+    },
+
     [errorIsActive, dispatch]
   );
 
