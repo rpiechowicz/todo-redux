@@ -137,7 +137,7 @@ function AddTask() {
 
         <div className={classes.item} onClick={handleAddTask}>
           <Button color="primary" variant="contained">
-            Add taks
+            Add task
           </Button>
         </div>
       </Panel>
